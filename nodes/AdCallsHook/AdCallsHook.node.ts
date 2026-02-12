@@ -3,9 +3,9 @@ import { isAdCallsPayload, transformAdCallsPayload } from './types';
 import { StandardCallEventBefore } from '../../lib/webhook/types';
 
 const config: WebhookNodeConfig<StandardCallEventBefore> = {
-	name: 'AdCallsHookBeforeCall',
-	displayName: 'AdCalls Before Call',
-	description: 'Starts the workflow before one of your AdCalls numbers is called',
+	name: 'AdCallsHook',
+	displayName: 'AdCalls Hook',
+	description: 'Starts the workflow when one of your AdCalls numbers is called',
 	icon: 'file:../../lib/adcalls.svg',
 	defaultPath: '',
 	categories: ['AdCalls'],
@@ -29,7 +29,7 @@ const config: WebhookNodeConfig<StandardCallEventBefore> = {
 	],
 };
 
-export class AdCallsHookBeforeCall extends BaseWebhookNode<StandardCallEventBefore> {
+export class AdCallsHook extends BaseWebhookNode<StandardCallEventBefore> {
 	constructor() {
 		super(config);
 	}

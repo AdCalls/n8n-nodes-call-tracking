@@ -11,14 +11,3 @@ export function webhookPathProperty(defaultPath: string): INodeProperties {
 		description: 'The path to listen on for this webhook',
 	};
 }
-
-export const secretProperty: INodeProperties = {
-	displayName: 'Webhook Secret',
-	name: 'webhookSecret',
-	type: 'string',
-	typeOptions: {
-		password: true,
-	},
-	default: '',
-	description: 'Secret key used to verify webhook signatures',
-};

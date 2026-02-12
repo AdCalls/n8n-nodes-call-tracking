@@ -8,7 +8,7 @@ import {
 import { NodeConnectionTypes } from 'n8n-workflow';
 import type { WebhookNodeConfig } from './types';
 import { verifyWebhookSecret } from './verification';
-import { secretProperty, webhookPathProperty } from './descriptions';
+import { webhookPathProperty } from './descriptions';
 
 /**
  * Registry to store configs by node name.
@@ -65,6 +65,12 @@ export abstract class BaseWebhookNode<TPayload = unknown> implements INodeType {
 			},
 			inputs: [],
 			outputs: [NodeConnectionTypes.Main],
+			credentials: [
+				{
+					name: 'adCallsWebhookApi',
+					required: true,
+				},
+			],
 			webhooks: [
 				{
 					name: 'default',
@@ -77,7 +83,6 @@ export abstract class BaseWebhookNode<TPayload = unknown> implements INodeType {
 			],
 			properties: [
 				webhookPathProperty(config.defaultPath),
-				secretProperty,
 				...(config.additionalProperties ?? []),
 			],
 		};
@@ -103,7 +108,8 @@ export abstract class BaseWebhookNode<TPayload = unknown> implements INodeType {
 		const headerData = this.getHeaderData();
 
 		// Step 1: Verify secret if configured
-		const secret = this.getNodeParameter('webhookSecret', '') as string;
+		const credentials = await this.getCredentials('adCallsWebhookApi');
+		const secret = (credentials?.token as string) ?? '';
 		if (!verifyWebhookSecret(headerData, secret)) {
 			res.status(401).json({ error: 'Invalid secret' });
 			return { noWebhookResponse: true };
