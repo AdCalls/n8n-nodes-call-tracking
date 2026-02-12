@@ -1,0 +1,16 @@
+{
+	"node": "@adcalls/n8n-nodes-call-tracking",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["AdCalls"],
+	"subcategories": {
+		"AdCalls": ["Call Events"]
+	},
+	"resources": {
+		"primaryDocumentation": [
+			{
+				"url": "https://adcalls.com/n8n-nodes-call-tracking"
+			}
+		]
+	}
+}

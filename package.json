@@ -30,16 +30,15 @@
 	"n8n": {
 		"n8nNodesApiVersion": 1,
 		"strict": true,
-		"credentials": [
-			"dist/credentials/GithubIssuesApi.credentials.js",
-			"dist/credentials/GithubIssuesOAuth2Api.credentials.js"
-		],
+		"credentials": [],
 		"nodes": [
-			"dist/nodes/GithubIssues/GithubIssues.node.js"
+			"dist/nodes/AdCallsHookBeforeCall/AdCallsHookBeforeCall.node.js",
+			"dist/nodes/AdCallsHookAfterCall/AdCallsHookAfterCall.node.js"
 		]
 	},
 	"devDependencies": {
 		"@n8n/node-cli": "*",
+		"@types/node": "^25.2.0",
 		"eslint": "9.32.0",
 		"prettier": "3.6.2",
 		"release-it": "^19.0.4",
