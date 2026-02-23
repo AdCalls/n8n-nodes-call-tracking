@@ -11,7 +11,7 @@ export class AdCallsWebhookApi implements ICredentialType {
 			type: 'string',
 			typeOptions: { password: true },
 			default: '',
-			description: 'Secret token used to verify webhook signatures',
+			description: 'Authorization Token',
 		},
 	];
 }

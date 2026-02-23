@@ -1,15 +1,16 @@
 /** HTTP headers type (equivalent to IncomingHttpHeaders from 'http' module) */
 export type WebhookHeaders = Record<string, string | string[] | undefined>;
 
-const SECRET_HEADER = 'x-ac-webhook-secret';
-
 export function verifyWebhookSecret(headers: WebhookHeaders, secret: string): boolean {
 	if (!secret) return false;
 
-	const headerValue = headers[SECRET_HEADER];
-	if (!headerValue || typeof headerValue !== 'string') {
+	const authHeader = headers['authorization'];
+	if (!authHeader || typeof authHeader !== 'string') {
 		return false;
 	}
 
-	return headerValue === secret;
+	const match = authHeader.match(/^Bearer\s+(.+)$/i);
+	if (!match) return false;
+
+	return match[1] === secret;
 }
