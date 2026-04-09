@@ -1,4 +1,4 @@
-import type { Icon, ICredentialType, INodeProperties } from 'n8n-workflow';
+import type { Icon, ICredentialTestRequest, ICredentialType, INodeProperties } from 'n8n-workflow';
 
 export class AdCallsWebhookApi implements ICredentialType {
 	name = 'adCallsWebhookApi';
@@ -14,4 +14,14 @@ export class AdCallsWebhookApi implements ICredentialType {
 			description: 'Authorization Token',
 		},
 	];
+	test: ICredentialTestRequest = {
+		request: {
+			baseURL: 'https://api.adcalls.nl',
+			url: '/integration/n8n/verification',
+			method: 'POST',
+			body: {
+				token: '={{$credentials.token}}',
+			},
+		},
+	};
 }
