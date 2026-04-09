@@ -2,8 +2,9 @@ import type { Icon, ICredentialTestRequest, ICredentialType, INodeProperties } f
 
 export class AdCallsWebhookApi implements ICredentialType {
 	name = 'adCallsWebhookApi';
-	displayName = 'AdCalls Webhook Secret';
+	displayName = 'AdCalls API Webhook Secret';
 	icon: Icon = 'file:../lib/adcalls.svg';
+	documentationUrl = 'https://calltracking.adcalls.nl/knowledge-center/article/310';
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Token',
