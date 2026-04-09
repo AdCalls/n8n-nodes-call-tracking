@@ -1,6 +1,6 @@
 {
 	"name": "@adcalls/n8n-nodes-call-tracking",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "These nodes let you integrate your AdCalls call-tracking with n8n.",
 	"license": "MIT",
 	"homepage": "",
