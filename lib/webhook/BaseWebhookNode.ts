@@ -4,8 +4,8 @@ import {
 	INodeTypeDescription,
 	IWebhookFunctions,
 	IWebhookResponseData,
+	NodeConnectionTypes,
 } from 'n8n-workflow';
-import { NodeConnectionTypes } from 'n8n-workflow';
 import type { WebhookNodeConfig } from './types';
 import { verifyWebhookSecret } from './verification';
 import { webhookPathProperty } from './descriptions';
@@ -81,10 +81,7 @@ export abstract class BaseWebhookNode<TPayload = unknown> implements INodeType {
 					nodeType: 'webhook',
 				},
 			],
-			properties: [
-				webhookPathProperty(config.defaultPath),
-				...(config.additionalProperties ?? []),
-			],
+			properties: [webhookPathProperty(config.defaultPath), ...(config.additionalProperties ?? [])],
 		};
 	}
 
