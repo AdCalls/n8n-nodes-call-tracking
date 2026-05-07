@@ -9,8 +9,5 @@ export function verifyWebhookSecret(headers: WebhookHeaders, secret: string): bo
 		return false;
 	}
 
-	const match = authHeader.match(/^Bearer\s+(.+)$/i);
-	if (!match) return false;
-
-	return match[1] === secret;
+	return authHeader === secret;
 }
