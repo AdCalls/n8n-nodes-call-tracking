@@ -1,4 +1,4 @@
-# Publishes this n8n community node package to npm on every version tag push.
+# Publishes this n8n community node package to npm when a GitHub release is published.
 #
 # Starting May 1 2026, n8n requires all community nodes to be published via
 # GitHub Actions with npm provenance statements. This workflow satisfies that
@@ -41,27 +41,22 @@
 #
 # ─── TAG CONVENTION ────────────────────────────────────────────────────────────
 #
-# This workflow triggers on tags matching "*.*.*" (e.g. 0.2.0).
-# If you prefer tags with a "v" prefix (e.g. v0.2.0), change the filter to:
-#   tags: ['v*.*.*']
+# Create GitHub releases with a semver tag (e.g. 1.2.3 or v1.2.3).
+# The tag name is used to sync package.json version before publishing.
+# Strip a leading "v" prefix if present so npm version receives a clean semver.
 #
 # ─── RELEASE PROCESS ───────────────────────────────────────────────────────────
 #
-# Run the following command locally to start an interactive release:
-#
-#   npm run release
-#
-# This will lint, build, prompt for a version bump, update the changelog,
-# commit, tag, and push — which triggers this workflow to publish to npm.
+# 1. Push your changes to main.
+# 2. On GitHub, go to Releases → Draft a new release.
+# 3. Create a new tag (e.g. 1.2.3), set the title and description, then click
+#    "Publish release". This workflow fires automatically and publishes to npm.
 
 name: Publish
 
 on:
-  push:
-    tags:
-      # Matches 0.1.0, 1.2.3, 2.0.0-rc.1, etc.
-      # See "TAG CONVENTION" above if you prefer tags with a "v" prefix.
-      - '*.*.*'
+  release:
+    types: [published]
 
 jobs:
   publish:
@@ -87,7 +82,7 @@ jobs:
         run: npm ci
 
       - name: Sync package.json version to tag
-        run: npm version ${{ github.ref_name }} --no-git-tag-version
+        run: npm version ${{ github.event.release.tag_name }} --no-git-tag-version
 
       - name: Release
         # Publishes to npm with a provenance attestation (requires id-token: write above).
