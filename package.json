@@ -3,7 +3,7 @@
 	"version": "0.1.2",
 	"description": "These nodes let you integrate your AdCalls call-tracking with n8n.",
 	"license": "MIT",
-	"homepage": "",
+	"homepage": "https://github.com/AdCalls/n8n-nodes-call-tracking",
 	"keywords": [
 		"n8n-community-node-package"
 	],
@@ -47,8 +47,5 @@
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"
-	},
-	"overrides": {
-		"change-case": "4"
 	}
 }
