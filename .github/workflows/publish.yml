@@ -82,7 +82,7 @@ jobs:
         run: npm ci
 
       - name: Sync package.json version to tag
-        run: npm version ${{ github.event.release.tag_name }} --no-git-tag-version
+        run: npm pkg set version=${{ github.event.release.tag_name }}
 
       - name: Release
         # Publishes to npm with a provenance attestation (requires id-token: write above).
