@@ -97,9 +97,9 @@ export interface StandardCallEventAfter extends StandardCallEvent {
  * Helper to create n8n execution data from any payload
  */
 export function createExecutionData<T extends IDataObject>(
-	json: T,
-	pairedItem?: { item: number },
-): INodeExecutionData {
+    json: Omit<StandardCallEvent, never>,
+    pairedItem?: { item: number },
+) {
 	return {
 		json,
 		...(pairedItem && { pairedItem }),
