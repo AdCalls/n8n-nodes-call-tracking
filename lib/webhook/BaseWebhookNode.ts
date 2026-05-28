@@ -47,62 +47,48 @@ export abstract class BaseWebhookNode<TPayload = unknown> implements INodeType {
 	webhookMethods = {
 		default: {
 			async checkExists(this: IHookFunctions): Promise<boolean> {
-				const credentials = await this.getCredentials('adCallsWebhookApi');
-				const token = credentials.token as string;
 				const address = this.getNodeWebhookUrl('default');
 
-				const response = await this.helpers.httpRequest({
-					method: 'POST',
-					url: `${API_BASE_URL}/integration/n8n/check-hook-n8n`,
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-					body: new URLSearchParams({ address: address!, token }).toString(),
-				});
-
-				const exists = response?.exists === true;
-				console.log(
-					'[checkExists] address:',
-					address,
-					'| response:',
-					JSON.stringify(response),
-					'| exists:',
-					exists,
+				const response = await this.helpers.httpRequestWithAuthentication.call(
+					this,
+					'adCallsWebhookApi',
+					{
+						method: 'POST',
+						url: `${API_BASE_URL}/integration/n8n/check-hook-n8n`,
+						headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+						body: { address: address! },
+					},
 				);
-				return exists;
+
+				return Boolean(response);
 			},
 			async create(this: IHookFunctions): Promise<boolean> {
-				const credentials = await this.getCredentials('adCallsWebhookApi');
-				const token = credentials.token as string;
 				const address = this.getNodeWebhookUrl('default');
 				const trigger = this.getNodeParameter('trigger', 0) as number;
 
-				console.log('[create] address:', address, '| trigger:', trigger);
-				const response = await this.helpers.httpRequest({
-					method: 'POST',
-					url: `${API_BASE_URL}/integration/n8n/create-hook-n8n`,
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-					body: new URLSearchParams({
-						trigger: String(trigger),
-						address: address!,
-						token,
-					}).toString(),
-				});
-				console.log('[create] response:', JSON.stringify(response));
-
-				return true;
+				const response = await this.helpers.httpRequestWithAuthentication.call(
+					this,
+					'adCallsWebhookApi',
+					{
+						method: 'POST',
+						url: `${API_BASE_URL}/integration/n8n/create-hook-n8n`,
+						headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+						body: { trigger: String(trigger), address: address! },
+					},
+				);
+				return Boolean(response);
 			},
 			async delete(this: IHookFunctions): Promise<boolean> {
-				const credentials = await this.getCredentials('adCallsWebhookApi');
-				const token = credentials.token as string;
 				const address = this.getNodeWebhookUrl('default');
 
-				await this.helpers.httpRequest({
+				const response = await this.helpers.httpRequestWithAuthentication.call(this, 'adCallsWebhookApi', {
 					method: 'POST',
 					url: `${API_BASE_URL}/integration/n8n/delete-hook-n8n`,
 					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-					body: new URLSearchParams({ address: address!, token }).toString(),
+					body: { address: address! },
 				});
 
-				return true;
+				return Boolean(response);
 			},
 		},
 	};
