@@ -22,9 +22,6 @@ export interface WebhookNodeConfig<TPayload = unknown> {
 	/** Icon configuration */
 	icon: INodeTypeDescription['icon'];
 
-	/** Default webhook path (e.g., 'adcalls') */
-	defaultPath: string;
-
 	/** Categories for grouping in n8n UI (e.g., ['AdCalls']) */
 	categories?: string[];
 
