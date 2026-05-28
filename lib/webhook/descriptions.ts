@@ -1,13 +1,16 @@
 import type { INodeProperties } from 'n8n-workflow';
 
-export function webhookPathProperty(defaultPath: string): INodeProperties {
-	return {
-		displayName: 'Webhook Path',
-		name: 'path',
-		type: 'string',
-		default: defaultPath,
-		placeholder: 'webhook-path',
-		required: true,
-		description: 'The path to listen on for this webhook',
-	};
-}
+export const triggerProperty: INodeProperties = {
+	displayName: 'Trigger',
+	name: 'trigger',
+	type: 'options',
+	required: true,
+	default: 1,
+	options: [
+		{ name: 'Before the call', value: 0 },
+		{ name: 'After the call', value: 1 },
+		{ name: 'After the call has been evaluated in the dashboard', value: 3 },
+		{ name: 'After the call request', value: 4 },
+		{ name: 'After the call request has been evaluated in the dashboard', value: 5 },
+	],
+};

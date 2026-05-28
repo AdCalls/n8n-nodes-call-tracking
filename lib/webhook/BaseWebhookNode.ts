@@ -1,5 +1,6 @@
 import {
 	IDataObject,
+	IHookFunctions,
 	INodeType,
 	INodeTypeDescription,
 	IWebhookFunctions,
@@ -8,7 +9,9 @@ import {
 } from 'n8n-workflow';
 import type { WebhookNodeConfig } from './types';
 import { verifyWebhookSecret } from './verification';
-import { webhookPathProperty } from './descriptions';
+import { triggerProperty } from './descriptions';
+
+const API_BASE_URL = 'https://api.adcalls.nl';
 
 /**
  * Registry to store configs by node name.
@@ -29,7 +32,6 @@ const configRegistry = new Map<string, WebhookNodeConfig<unknown>>();
  *   displayName: 'My Webhook',
  *   description: 'Receives webhooks from My Service',
  *   icon: 'file:myIcon.svg',
- *   defaultPath: 'my-webhook',
  *   transformPayload: (payload) => [{ json: payload }],
  * };
  *
@@ -42,6 +44,68 @@ const configRegistry = new Map<string, WebhookNodeConfig<unknown>>();
  */
 export abstract class BaseWebhookNode<TPayload = unknown> implements INodeType {
 	description: INodeTypeDescription;
+	webhookMethods = {
+		default: {
+			async checkExists(this: IHookFunctions): Promise<boolean> {
+				const credentials = await this.getCredentials('adCallsWebhookApi');
+				const token = credentials.token as string;
+				const address = this.getNodeWebhookUrl('default');
+
+				const response = await this.helpers.httpRequest({
+					method: 'POST',
+					url: `${API_BASE_URL}/integration/n8n/check-hook-n8n`,
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: new URLSearchParams({ address: address!, token }).toString(),
+				});
+
+				const exists = response?.exists === true;
+				console.log(
+					'[checkExists] address:',
+					address,
+					'| response:',
+					JSON.stringify(response),
+					'| exists:',
+					exists,
+				);
+				return exists;
+			},
+			async create(this: IHookFunctions): Promise<boolean> {
+				const credentials = await this.getCredentials('adCallsWebhookApi');
+				const token = credentials.token as string;
+				const address = this.getNodeWebhookUrl('default');
+				const trigger = this.getNodeParameter('trigger', 0) as number;
+
+				console.log('[create] address:', address, '| trigger:', trigger);
+				const response = await this.helpers.httpRequest({
+					method: 'POST',
+					url: `${API_BASE_URL}/integration/n8n/create-hook-n8n`,
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: new URLSearchParams({
+						trigger: String(trigger),
+						address: address!,
+						token,
+					}).toString(),
+				});
+				console.log('[create] response:', JSON.stringify(response));
+
+				return true;
+			},
+			async delete(this: IHookFunctions): Promise<boolean> {
+				const credentials = await this.getCredentials('adCallsWebhookApi');
+				const token = credentials.token as string;
+				const address = this.getNodeWebhookUrl('default');
+
+				await this.helpers.httpRequest({
+					method: 'POST',
+					url: `${API_BASE_URL}/integration/n8n/delete-hook-n8n`,
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: new URLSearchParams({ address: address!, token }).toString(),
+				});
+
+				return true;
+			},
+		},
+	};
 
 	constructor(config: WebhookNodeConfig<TPayload>) {
 		// Register config in the registry for later retrieval in webhook method
@@ -75,13 +139,13 @@ export abstract class BaseWebhookNode<TPayload = unknown> implements INodeType {
 				{
 					name: 'default',
 					httpMethod: 'POST',
-					path: '={{$parameter["path"]}}',
+					path: 'webhook',
 					responseMode: 'onReceived',
 					isFullPath: false,
 					nodeType: 'webhook',
 				},
 			],
-			properties: [webhookPathProperty(config.defaultPath), ...(config.additionalProperties ?? [])],
+			properties: [triggerProperty, ...(config.additionalProperties ?? [])],
 		};
 	}
 
