@@ -80,25 +80,15 @@ export interface StandardCallEventAfter extends StandardCallEvent {
 	answered_string: string;
 }
 
-// export type StandardCallEventAfter = {
-// 	started: string;
-// 	duration: number;
-// 	call_time: number;
-// 	dialed_time: number;
-// 	hangup_cause: string;
-// 	answered: boolean;
-// 	answered_string: string;
-// };
-
 /**
  * Helper to create n8n execution data from any payload
  */
-export function createExecutionData<T extends IDataObject>(
-    json: Omit<StandardCallEvent, never>,
-    pairedItem?: { item: number },
-) {
+export function createExecutionData(
+	json: StandardCallEvent,
+	pairedItem?: { item: number },
+): INodeExecutionData {
 	return {
-		json,
+		json: json as unknown as IDataObject,
 		...(pairedItem && { pairedItem }),
 	};
 }
@@ -106,6 +96,6 @@ export function createExecutionData<T extends IDataObject>(
 /**
  * Helper to create multiple execution data items
  */
-export function createExecutionDataArray<T extends IDataObject>(items: T[]): INodeExecutionData[] {
+export function createExecutionDataArray(items: StandardCallEvent[]): INodeExecutionData[] {
 	return items.map((json, index) => createExecutionData(json, { item: index }));
 }

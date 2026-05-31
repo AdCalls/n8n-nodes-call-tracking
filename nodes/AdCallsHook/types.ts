@@ -1,5 +1,5 @@
-import type { INodeExecutionData } from 'n8n-workflow';
 import type { StandardCallEvent } from '../../lib/webhook';
+import type { INodeExecutionData } from 'n8n-workflow';
 import { createExecutionData } from '../../lib/webhook';
 import type { StandardCallEventBefore } from '../../lib/webhook/types';
 
@@ -38,7 +38,9 @@ export function isAdCallsPayload(payload: unknown): payload is StandardCallEvent
 /**
  * Transform AdCalls payload to standardized format
  */
-export function transformAdCallsPayload(payload: StandardCallEvent): { json: Omit<StandardCallEvent, never> }[] {
+export function transformAdCallsPayload(
+	payload: StandardCallEvent,
+): INodeExecutionData[] {
 	const { ...validFields } = payload;
 	return [createExecutionData(validFields)];
 }
