@@ -16,3 +16,7 @@ Integrate AdCalls call tracking events directly into your n8n workflows using th
 3. **Configure the trigger** — After your credentials are verified, select the event that should trigger the workflow.
 
 4. **Test the integration** — Click **Execute Event** in n8n to register the webhook, then open the AdCalls dashboard. Under the n8n integration section, a new webhook entry will appear (refresh the page if needed). Click the webhook and press **Test**. A successful response confirms your workflow is ready.
+
+## Further Documentation
+
+Detailed documentation, including available trigger events and advanced configuration options, can be found directly in the AdCalls dashboard under the n8n integration section.

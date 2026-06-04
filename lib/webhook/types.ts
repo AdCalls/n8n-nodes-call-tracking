@@ -48,11 +48,11 @@ export interface StandardCallEvent {
 	id: number;
 	domain: string;
 	source: string;
-	caller: string;
+	caller: number;
 	number: string;
-	destination: string;
-	ext_ref_id: string;
-	url: string;
+	destination: number;
+	ext_ref_id: null | string;
+	url: null | string;
 	session_cid: null | string;
 	google_gclid: null | string;
 	google_dclid: null | string;
@@ -61,13 +61,11 @@ export interface StandardCallEvent {
 	msclkid: null | string;
 	fbp: null | string;
 	fbc: null | string;
-	visitor_id: string;
+	visitor_id: null | string;
 }
 
 export interface StandardCallEventBefore extends StandardCallEvent {
 	timestamp: string;
-	visitor_id: string;
-	secretstring: string;
 }
 
 export interface StandardCallEventAfter extends StandardCallEvent {

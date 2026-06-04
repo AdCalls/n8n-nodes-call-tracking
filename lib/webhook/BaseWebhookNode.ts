@@ -10,8 +10,7 @@ import {
 import type { WebhookNodeConfig } from './types';
 import { verifyWebhookSecret } from './verification';
 import { triggerProperty } from './descriptions';
-
-const API_BASE_URL = 'https://api.adcalls.nl';
+import { API_BASE_URL } from '../constants';
 
 /**
  * Registry to store configs by node name.
@@ -81,12 +80,16 @@ export abstract class BaseWebhookNode<TPayload = unknown> implements INodeType {
 			async delete(this: IHookFunctions): Promise<boolean> {
 				const address = this.getNodeWebhookUrl('default');
 
-				const response = await this.helpers.httpRequestWithAuthentication.call(this, 'adCallsWebhookApi', {
-					method: 'POST',
-					url: `${API_BASE_URL}/integration/n8n/delete-hook-n8n`,
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-					body: { address: address! },
-				});
+				const response = await this.helpers.httpRequestWithAuthentication.call(
+					this,
+					'adCallsWebhookApi',
+					{
+						method: 'POST',
+						url: `${API_BASE_URL}/integration/n8n/delete-hook-n8n`,
+						headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+						body: { address: address! },
+					},
+				);
 
 				return Boolean(response);
 			},

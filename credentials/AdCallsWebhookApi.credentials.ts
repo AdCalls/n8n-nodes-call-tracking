@@ -5,12 +5,13 @@ import type {
 	ICredentialType,
 	INodeProperties,
 } from 'n8n-workflow';
+import { API_BASE_URL, DOCUMENTATION_URL } from '../lib/constants';
 
 export class AdCallsWebhookApi implements ICredentialType {
 	name = 'adCallsWebhookApi';
 	displayName = 'AdCalls Webhook API';
 	icon: Icon = 'file:../lib/adcalls.svg';
-	documentationUrl = 'https://calltracking.adcalls.nl/knowledge-center/article/310';
+	documentationUrl = DOCUMENTATION_URL;
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Token',
@@ -31,7 +32,7 @@ export class AdCallsWebhookApi implements ICredentialType {
 	};
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://api.adcalls.nl',
+			baseURL: API_BASE_URL,
 			url: '/integration/n8n/verification',
 			method: 'POST',
 			body: {
