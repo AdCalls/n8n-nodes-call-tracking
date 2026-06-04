@@ -1,38 +1,64 @@
 import type { StandardCallEvent } from '../../lib/webhook';
 import type { INodeExecutionData } from 'n8n-workflow';
 import { createExecutionData } from '../../lib/webhook';
-import type { StandardCallEventBefore } from '../../lib/webhook/types';
+import type { StandardCallEventBefore, StandardCallEventAfter } from '../../lib/webhook/types';
 
-function isNullableString(v: unknown): v is null | string {
-	return v === null || typeof v === 'string';
+export type AdCallsPayload = StandardCallEventBefore | StandardCallEventAfter;
+
+type FieldValidator = (v: unknown) => boolean;
+type Schema = Record<string, FieldValidator>;
+
+const isString = (v: unknown): v is string => typeof v === 'string';
+const isNumber = (v: unknown): v is number => typeof v === 'number';
+const isBoolean = (v: unknown): v is boolean => typeof v === 'boolean';
+const isNullableString = (v: unknown): v is null | string => v === null || typeof v === 'string';
+
+function matchesSchema(p: Record<string, unknown>, schema: Schema): boolean {
+	return Object.entries(schema).every(([key, validate]) => validate(p[key]));
 }
 
-export function isAdCallsPayload(payload: unknown): payload is StandardCallEventBefore {
+const COMMON_SCHEMA: Schema = {
+	id: isNumber,
+	domain: isString,
+	source: isString,
+	caller: isNumber,
+	number: isString,
+	destination: isNumber,
+	ext_ref_id: isNullableString,
+	url: isNullableString,
+	session_cid: isNullableString,
+	google_gclid: isNullableString,
+	google_dclid: isNullableString,
+	bgid: isNullableString,
+	campaignid: isNullableString,
+	msclkid: isNullableString,
+	fbp: isNullableString,
+	fbc: isNullableString,
+	visitor_id: isNullableString,
+};
+
+// Each entry represents the unique fields for one payload type
+const TYPE_SCHEMAS: Schema[] = [
+	// StandardCallEventBefore
+	{ timestamp: isString },
+	// StandardCallEventAfter
+	{
+		started: isString,
+		duration: isNumber,
+		call_time: isNumber,
+		dialed_time: isNumber,
+		hangup_cause: isString,
+		answered: isBoolean,
+		answered_string: isString,
+	},
+];
+
+export function isAdCallsPayload(payload: unknown): payload is AdCallsPayload {
 	if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
 		return false;
 	}
 	const p = payload as Record<string, unknown>;
-	return (
-		typeof p.id === 'number' &&
-		typeof p.domain === 'string' &&
-		typeof p.source === 'string' &&
-		typeof p.caller === 'string' &&
-		typeof p.number === 'string' &&
-		typeof p.destination === 'string' &&
-		typeof p.ext_ref_id === 'string' &&
-		typeof p.url === 'string' &&
-		typeof p.visitor_id === 'string' &&
-		typeof p.timestamp === 'string' &&
-		typeof p.secretstring === 'string' &&
-		isNullableString(p.session_cid) &&
-		isNullableString(p.google_gclid) &&
-		isNullableString(p.google_dclid) &&
-		isNullableString(p.bgid) &&
-		isNullableString(p.campaignid) &&
-		isNullableString(p.msclkid) &&
-		isNullableString(p.fbp) &&
-		isNullableString(p.fbc)
-	);
+	return matchesSchema(p, COMMON_SCHEMA) && TYPE_SCHEMAS.some((schema) => matchesSchema(p, schema));
 }
 
 /**

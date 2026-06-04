@@ -5,6 +5,7 @@ import type {
 	ICredentialType,
 	INodeProperties,
 } from 'n8n-workflow';
+import { API_BASE_URL } from '../lib/constants';
 
 export class AdCallsWebhookApi implements ICredentialType {
 	name = 'adCallsWebhookApi';
@@ -31,7 +32,7 @@ export class AdCallsWebhookApi implements ICredentialType {
 	};
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://api.adcalls.nl',
+			baseURL: API_BASE_URL,
 			url: '/integration/n8n/verification',
 			method: 'POST',
 			body: {
