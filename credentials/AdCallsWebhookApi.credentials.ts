@@ -5,13 +5,13 @@ import type {
 	ICredentialType,
 	INodeProperties,
 } from 'n8n-workflow';
-import { API_BASE_URL, DOCUMENTATION_URL } from '../lib/constants';
+import { API_BASE_URL } from '../lib/constants';
 
 export class AdCallsWebhookApi implements ICredentialType {
 	name = 'adCallsWebhookApi';
 	displayName = 'AdCalls Webhook API';
 	icon: Icon = 'file:../lib/adcalls.svg';
-	documentationUrl = DOCUMENTATION_URL;
+	documentationUrl = 'https://calltracking.adcalls.nl/knowledge-center/article/310';
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Token',
