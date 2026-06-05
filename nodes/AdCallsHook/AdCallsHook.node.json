@@ -2,7 +2,7 @@
 	"node": "@adcalls/n8n-nodes-call-tracking",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
-	"categories": ["AdCalls"],
+	"categories": ["Analytics"],
 	"resources": {
 		"primaryDocumentation": [
 			{
