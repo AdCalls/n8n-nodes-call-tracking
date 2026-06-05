@@ -6,7 +6,7 @@ const config: WebhookNodeConfig<AdCallsPayload> = {
 	displayName: 'AdCalls Hook',
 	description: 'Starts the workflow when one of your AdCalls numbers is called',
 	icon: 'file:../../lib/adcalls.svg',
-	categories: ['AdCalls'],
+	categories: ['Analytics'],
 	validatePayload: isAdCallsPayload,
 	transformPayload: transformAdCallsPayload,
 };
